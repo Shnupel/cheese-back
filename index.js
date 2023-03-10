@@ -3,7 +3,7 @@ const app = express();
 const ProductsController = require("./controllers/products");
 const UsersController = require("./controllers/users");
 
-const port = 4444;
+const port = process.env.PORT;
 
 app.listen(port);
 
