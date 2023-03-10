@@ -11,7 +11,8 @@ app.use(async (req, res, next) => {
   try {
     res.writeHead(200, {
       'Access-Control-Allow-Origin': "*"
-    })
+    });
+    next();
   } catch (error) {
     res.json(error);
   }
