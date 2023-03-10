@@ -9,9 +9,8 @@ app.listen(port);
 
 app.use(async (req, res, next) => {
   try {
-    res.writeHead(200, {
-      'Access-Control-Allow-Origin': "*"
-    });
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
     next();
   } catch (error) {
     res.json(error);
