@@ -12,5 +12,5 @@ app.use("/users", UsersController);
 
 app.get("/", (req, res) => {
   res.status(200);
-  res.send("")
+  res.send("hello world")
 })
