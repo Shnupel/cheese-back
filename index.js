@@ -11,6 +11,7 @@ app.use(async (req, res, next) => {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+    res.setHeader(' strict-origin-when-cross-origin');
     next();
   } catch (error) {
     res.json(error);
