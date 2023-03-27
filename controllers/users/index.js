@@ -22,6 +22,23 @@ router.get("/", BodyParser(), async (req, res) => {
   }
 });
 
+router.get("/auth", BodyParser(), async (req, res) => {
+  try {
+    const { password, email } = req.body;
+    const data = await Auth({ email, password });
+    if(data.success){
+      res.status(200);
+      res.json(data)
+    }else{
+      res.status(200);
+      res.json({ success: false })
+    }
+  } catch (e) {
+    res.status(300);
+    res.json({ success: false })
+  }
+})
+
 router.post("/add", BodyParser(), async (req, res) => {
   try{
     const { password, email } = req.body;
@@ -46,7 +63,7 @@ router.patch("/addProduct", BodyParser(), async (req, res) => {
     const { password, email, product } = req.body;
     const data = await Auth({ email, password });
     if(!data.success){
-      res.status(200);
+      res.status(500);
       return res.json({ success: false, error: "fail password" });
     }
     const isAdded = await UsersModel.addProduct({ email, product });
@@ -54,6 +71,24 @@ router.patch("/addProduct", BodyParser(), async (req, res) => {
     res.json({ success: isAdded.success });
   }catch (e){
     res.status(500);
+    res.json({ success: false, message: e.message });
+  }
+});
+
+router.patch("/deleteProduct", BodyParser(), async (req, res) => {
+  try {
+    const { password, email, product } = req.body;
+    const data = await Auth({ email, password });
+    if(!data.success){
+      res.send(500);
+      return res.json({ success: false, error: "fail password" });
+    }
+    const isDeleted = await UsersModel.removeProduct({ email, product });
+    res.status(200);
+    res.json({ success: true })
+  } catch (e) {
+    res.status(500);
+    console.log(e);
     res.json({ success: false, message: e.message });
   }
 })
