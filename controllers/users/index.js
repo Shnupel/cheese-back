@@ -22,7 +22,7 @@ router.get("/", BodyParser(), async (req, res) => {
   }
 });
 
-router.get("/auth", BodyParser(), async (req, res) => {
+router.post("/auth", BodyParser(), async (req, res) => {
   try {
     const { password, email } = req.body;
     const data = await Auth({ email, password });
@@ -88,7 +88,6 @@ router.patch("/deleteProduct", BodyParser(), async (req, res) => {
     res.json({ success: true })
   } catch (e) {
     res.status(500);
-    console.log(e);
     res.json({ success: false, message: e.message });
   }
 })

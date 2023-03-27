@@ -5,7 +5,7 @@ const DBPath = path.join(__dirname, "..", "..", "db", "users.json");
 
 class UsersModel {
   static getUserByID(userId){
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve, reject) => { 
       fs.readFile(DBPath, "utf-8", (err, result) => {
         if(err) return { error: err, haveError: true};
         const { users } =  JSON.parse(result);
@@ -62,7 +62,6 @@ class UsersModel {
         if(productId == -1){
           users[userID].products.push(product);
         }else{
-          console.log(users[userID].products, productId);
           users[userID].products[productId].counter++;
         }
         fs.writeFile(DBPath, JSON.stringify({ users }), (err) => {
