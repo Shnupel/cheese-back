@@ -26,7 +26,7 @@ class UsersModel {
         const { users } = JSON.parse(value);
         const user = users.find(({ email }) => email === userEmail);
         if(user === undefined){
-          resolve({ success: false })
+          resolve({ success: false }) 
         }
         resolve(user);
       })
@@ -55,18 +55,19 @@ class UsersModel {
         if(err) return reject(err);
         const { users } = JSON.parse(result);
         const userID = users.findIndex(({ email }) => email === userEmail);
+        if(userID === -1) return reject({ success: false, message: "this is not includes" })
         if(users[userID].products.includes(product)){
           return reject({ success: false, message: "this is includes" });
         }
         const productId = users[userID].products.findIndex(({ id }) => product.id == id);
         if(productId == -1){
-          users[userID].products.push(product);
+          users[userID].products.push({...product, counter: 1});
         }else{
-          users[userID].products[productId].counter++;
+          users[userID].products[productId].counter++; 
         }
         fs.writeFile(DBPath, JSON.stringify({ users }), (err) => {
           if(err) return reject({ success: false, err: error });
-          resolve({ success: true });
+          resolve({ success: true }); 
         })
       })
     });
@@ -78,6 +79,7 @@ class UsersModel {
         if(err) return reject(err);
         const { users } = JSON.parse(result);
         const userID = users.findIndex(({ email }) => email === userEmail);
+        if(userID === -1) reject({ success: false, message })
         if(users[userID].products.includes(product)){
           return reject({ success: false, message: "this is includes" });
         }
@@ -87,6 +89,26 @@ class UsersModel {
         }else{
           users[userID].products[productId].counter--
         }
+        fs.writeFile(DBPath, JSON.stringify({ users }), (err) => {
+          if(err) return reject({ success: false, err: error });
+          resolve({ success: true });
+        })
+      })
+    })
+  }
+
+  static deleteProduct({ email: userEmail, product }){
+    return new Promise((resolve, reject) => {
+      fs.readFile(DBPath, "utf-8", (err, result) => {
+        if(err) return reject(err);
+        const { users } = JSON.parse(result);
+        const userID = users.findIndex(({ email }) => email === userEmail);
+        if(users[userID].products.includes(product)){
+          return reject({ success: false, message: "this is includes" });
+        }
+        const productId = users[userID].products.findIndex(({ id }) => product.id == id);
+        if(productId == -1) reject({ success: false, message: "this is not includes" });
+        users[userID].products = users[userID].products.filter(({ id }) => id != product.id);
         fs.writeFile(DBPath, JSON.stringify({ users }), (err) => {
           if(err) return reject({ success: false, err: error });
           resolve({ success: true });
