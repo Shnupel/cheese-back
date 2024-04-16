@@ -5,7 +5,9 @@ const UsersController = require("./controllers/users");
 
 const port = process.env.PORT || 4444;
 
-app.listen(port);
+app.listen(port, () => {
+  console.log(port)
+});
 
 app.use(async (req, res, next) => {
   try {
